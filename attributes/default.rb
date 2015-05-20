@@ -17,5 +17,5 @@
 # limitations under the License.
 #
 
-default['usao-logstash-forwarder']['server'] = "usao-logs"
-default['usao-logstash-forwarder']['server']['username'] = "usao"
+default["usao-logstash-forwarder"]["server"]["name"]        = "usao-logs"
+default["usao-logstash-forwarder"]["server"]["username"]    = "usao"
