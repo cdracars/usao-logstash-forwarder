@@ -9,7 +9,7 @@
 
 execute "Move SSL Certs" do
   command "scp /etc/pki/tls/certs/logstash-forwarder.crt #{node['usao-logstash-forwarder']['server']['username']}@#{node['usao-logstash-forwarder']['server']['name']}:/tmp"
-  not_if { ::Directory.exists?("/etc/pki/tls/certs")}
+  not_if { ::File.directory?("/etc/pki/tls/certs")}
 end
 
 apt_repository 'logstashforwarder' do
@@ -26,7 +26,7 @@ end
 
 execute "Make certs directory" do
   command "sudo mkdir -p /etc/pki/tls/certs"
-  not_if { ::Directory.exists?("/etc/pki/tls/certs")}
+  not_if { ::File.directory?("/etc/pki/tls/certs")}
 end
 execute "Move certs into place" do
   command "sudo cp /tmp/logstash-forwarder.crt /etc/pki/tls/certs/"
