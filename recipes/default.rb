@@ -7,9 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 
-#execute "Move SSL Certs" do
-#  command "scp /etc/pki/tls/certs/logstash-forwarder.crt #{node['usao-logstash-forwarder']['server']['username']}@#{node['usao-logstash-forwarder']['server']['name']}:/tmp"
-#end
+execute "Move SSL Certs" do
+  command "scp /etc/pki/tls/certs/logstash-forwarder.crt #{node['usao-logstash-forwarder']['server']['username']}@#{node['usao-logstash-forwarder']['server']['name']}:/tmp"
+end
 
 apt_repository 'logstashforwarder' do
   uri 'http://packages.elasticsearch.org/logstashforwarder/debian'
@@ -23,16 +23,12 @@ package 'logstash-forwarder' do
   action :install
 end
 
-execute "Make cert directory" do
+execute "Make certs directory" do
   command "sudo mkdir -p /etc/pki/tls/certs"
 end
-#execute "Move certs" do
-#  command "sudo cp /tmp/logstash-forwarder.crt"
-#end
-
-#execute "Move edit stuff" do
-#  command "sudo vi /etc/logstash-forwarder.conf"
-#end
+execute "Move certs into place" do
+  command "sudo cp /tmp/logstash-forwarder.crt /etc/pki/tls/certs/"
+end
 
 service 'logstash-forwarder' do
   supports :status => true, :restart => true
@@ -43,5 +39,5 @@ template "/etc/logstash-forwarder.conf" do
   owner  "root"
   group  "root"
   mode   "0644"
-  notifies :reload, 'service[logstash-forwarder]', :immediately
+  notifies :restart, 'service[logstash-forwarder]', :immediately
 end
